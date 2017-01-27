@@ -1,0 +1,159 @@
+<nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavbarController">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#Search">Search<span class="sr-only">(current)</span></a></li>
+                <li><a href="#Status">Status</a></li>
+                <li><a href="#Groups">Groups</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <button class="btn btn-primary" type="button" style="margin-top: 10px; margin-right: 10px" ng-click="logout()">Log Out</button>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div id="Search" class="container" ng-controller="MainController" style="margin-top: 50px">
+    <div class="row">
+        <h1 class="text-center">Elections</h1>
+    </div>
+    <div class="container" style="min-height: 100%">
+        <div class="col-md-6">
+            <div class="row text-center">
+                <h2>Search</h2>
+            </div>
+            <form action="/">
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Serial Number" ng-model="personquery.serial">
+                </div>
+                <div class="form-group">
+                    <select name="" id="" class="form-control" ng-model="title">
+                        <option value="" selected>Title</option>
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="First Name" ng-model="personquery.first_name">
+                    <input class="form-control" type="text" placeholder="Last Name" ng-model="personquery.last_name">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Home Number" ng-model="personquery.home_phone">
+                    <input class="form-control" type="text" placeholder="Cell Number" ng-model="personquery.cell_phone">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Apt. Number" ng-model="personquery.apt_number">
+                    <input class="form-control" type="text" placeholder="Street Number" ng-model="personquery.street_number">
+                    <input class="form-control" type="text" placeholder="Street Name" ng-model="personquery.street_name">
+                    <input class="form-control" type="text" placeholder="Postal Code" ng-model="personquery.postal_code">
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary" type="button" ng-click="SearchPerson()">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="row text-center">
+                <h2>Search Result</h2>
+            </div>
+            <div class="row" style="height: 450px;overflow: auto">
+                <table class="table table-stripped">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Address</th>
+                        <th>Serial Number</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="person in PeopleResultSet">
+                        <td>{{person.first_name}} {{person.last_name}}</td>
+                        <td>{{person.apt_number ? person.apt_number + "-": ""}}{{person.street_number}} {{person.street_name}}</td>
+                        <td>{{person.serial}}</td>
+                        <td><button class="btn btn-success" ng-click="VotePerson(person.first_name, person.last_name, person.serial)" >Vote</button></td>
+                        <td><button class="btn btn-warning" ng-click="UnVotePerson(person.first_name, person.last_name, person.serial)" >Un Vote</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="Status" class="container" style="min-height: 100%">
+        <div class="col-md-6">
+            <div class="row text-center">
+                <h2>Voted ({{VotedCount}})</h2>
+            </div>
+            <div class="row" style="height: 450px; overflow: auto">
+                <table class="table table-stripped">
+                    <tr>
+			<th>Serial</th>
+                        <th>Full Name</th>
+                        <th>Cell Phone</th>
+                        <th>Home Phone</th>
+                    </tr>
+                    <tr ng-repeat="person in PeopleVoted">
+			<td>{{person.serial}}</td>
+                        <td>{{person.first_name}} {{person.last_name}}</td>
+                        <td>{{person.cell_phone ? person.cell_phone : 'N/A'}}</td>
+                        <td>{{person.home_phone ? person.home_phone : 'N/A'}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row text-center">
+                <h2>Not Voted ({{UnVotedCount}})</h2>
+            </div>
+            <div class="row" style="height: 450px; overflow: auto">
+                <table class="table table-stripped">
+                    <tr>
+			<th>Serial</th>
+                        <th>Full Name</th>
+                        <th>Cell Phone</th>
+                        <th>Home Phone</th>
+                    </tr>
+                    <tr ng-repeat="person in PeopleUnVoted">
+			<td>{{person.serial}}</td>
+                        <td>{{person.first_name}} {{person.last_name}}</td>
+                        <td>{{person.cell_phone ? person.cell_phone : 'N/A'}}</td>
+                        <td>{{person.home_phone ? person.home_phone : 'N/A'}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="Groups" class="container" style="min-height: 100%; margin-bottom: 100px">
+        <form action="/" class="form-horizontal">
+            <div class="col-md-6" class="form-group">
+                <select id="GroupDropDown" class="form-control">
+                    <option value="0" selected>Select Group Number</option>
+                    <option value="{{$index + 1}}" ng-repeat="i in range(10) track by $index">{{$index + 1}}</option>
+                </select>
+            </div>
+            <div class="col-md-offset-2 col-md-4">
+                <button class="btn btn-primary" type="button" ng-click="GetGroup()">Get PDF</button>
+            </div>
+        </form>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    Developed by <a href="mailto:marcoazer94@gmail.com">Marco Azer</a>
+                </div>
+                <div class="col-md-2">
+                    <ul>
+                        <li><a href="https://github.com/Marco-Azer" target="_blank"><i class="fa fa-github"></i></a></li>
+                        <li><a href="https://ca.linkedin.com/in/marco-azer-a32a3483" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                        <li><a href="mailto:marcoazer94@gmail.com"><i class="fa fa-envelope"></i></a></li>
+                    </ul>
+                </div>
